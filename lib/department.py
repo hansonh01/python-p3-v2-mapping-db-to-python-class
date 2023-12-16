@@ -2,6 +2,7 @@ from __init__ import CURSOR, CONN
 
 
 class Department:
+    all ={}
 
     def __init__(self, name, location, id=None):
         self.id = id
@@ -45,6 +46,7 @@ class Department:
         CONN.commit()
 
         self.id = CURSOR.lastrowid
+        type(self).all[self.id] = self
 
     @classmethod
     def create(cls, name, location):
@@ -72,6 +74,9 @@ class Department:
 
         CURSOR.execute(sql, (self.id,))
         CONN.commit()
+
+        del type(self).all[self.id]
+        self.id  = None
 
     @classmethod
     def instance_from_db(cls, row):
